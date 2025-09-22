@@ -1,12 +1,5 @@
 FROM openjdk:17
 
-# Copy compiled classes into the container
-COPY ./target/classes /app/classes
-
-# Set the working directory
-WORKDIR /app/classes
-
-# Run your main class
-ENTRYPOINT ["java", "com.napier.sem.App"]
-
-
+COPY ./target/sem2025-0.1.0.2-jar-with-dependencies.jar /tmp
+WORKDIR /tmp
+ENTRYPOINT ["java", "-jar", "sem2025-0.1.0.2-jar-with-dependencies.jar"]
