@@ -1,12 +1,5 @@
 FROM openjdk:17
 
-# Copy compiled classes into the container
-COPY ./target/sem2025-1.0-jar-with-dependencies.jar /tmp
-
-# Set the working directory
+COPY ./target/sem2025-0.1.0.2-jar-with-dependencies.jar /tmp
 WORKDIR /tmp
-
-# Run your main class
-ENTRYPOINT ["java", "-jar", "sem2025-1.0-jar-with-dependencies.jar"]
-
-
+ENTRYPOINT ["java", "-jar", "sem2025-0.1.0.2-jar-with-dependencies.jar"]
