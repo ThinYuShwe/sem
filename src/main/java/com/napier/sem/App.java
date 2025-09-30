@@ -32,6 +32,11 @@ public class App {
                         "jdbc:mysql://db:3306/employees?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
                         "root",
                         "example");
+//                con = DriverManager.getConnection(
+//                        "jdbc:mysql://localhost:33060/employees?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+//                        "root",
+//                        "example");
+
 
                 System.out.println("Successfully connected");
                 Thread.sleep(10000);
@@ -112,6 +117,44 @@ public class App {
     }
 
     /**
+     * Gets all employees with their salary by a given role (title).
+     * @param title The job title to filter by.
+     * @return A list of employees with that role and their salary, or null if error.
+     */
+    public ArrayList<Employee> getSalariesByRole(String title) {
+        try {
+            String sql =
+                    "SELECT employees.emp_no, employees.first_name, employees.last_name, salaries.salary " +
+                            "FROM employees, salaries, titles " +
+                            "WHERE employees.emp_no = salaries.emp_no " +
+                            "AND employees.emp_no = titles.emp_no " +
+                            "AND salaries.to_date = '9999-01-01' " +
+                            "AND titles.to_date = '9999-01-01' " +
+                            "AND titles.title = ? " +
+                            "ORDER BY employees.emp_no ASC";
+
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, title);   // replace ? with the given role name
+
+            ResultSet rset = pstmt.executeQuery();
+            ArrayList<Employee> employees = new ArrayList<>();
+            while (rset.next()) {
+                Employee emp = new Employee();
+                emp.emp_no = rset.getInt("employees.emp_no");
+                emp.first_name = rset.getString("employees.first_name");
+                emp.last_name = rset.getString("employees.last_name");
+                emp.salary = rset.getInt("salaries.salary");
+                employees.add(emp);
+            }
+            return employees;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get salary details by role");
+            return null;
+        }
+    }
+
+    /**
      * Display a single employee
      */
     public void displayEmployee(Employee emp) {
@@ -172,10 +215,10 @@ public class App {
 
         // Get a single employee
         // Extract employee salary information
-        ArrayList<Employee> employees = a.getAllSalaries();
+        ArrayList<Employee> engineers = a.getSalariesByRole("Engineer");
 
         // Test the size of the returned data - should be 240124
-        a.printSalaries(employees);
+        a.printSalaries(engineers);
 
         // Disconnect from database
         a.disconnect();
