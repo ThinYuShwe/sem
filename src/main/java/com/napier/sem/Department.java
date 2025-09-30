@@ -2,6 +2,7 @@ package com.napier.sem;
 
 public class Department {
     private String dept_no, dept_name;
+    public Employee manager;
 
     public Department(String dept_no, String dept_name) {
         this.dept_no = dept_no;
